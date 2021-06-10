@@ -17,7 +17,7 @@ class Question:
 
     def create_question_text(self, question_number):
         """presents the question to the user"""
-        return f"\nQuestion {question_number}: What is the capital of {self.state}?"
+        return f"Question {question_number}: What is the capital of {self.state}?"
 
 
     def create_population_rank_and_weight_text(self):
