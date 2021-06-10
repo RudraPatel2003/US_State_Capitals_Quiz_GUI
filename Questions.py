@@ -2,7 +2,7 @@ from States_and_State_Capitals_Reader import list_of_state_names, dictionary_of_
 from Population_Rank_Web_Scraper import dictionary_of_population_ranks
 
 
-#the purpose of this file is to create the list of random questions that will be used in the quiz
+#the purpose of this file is to create the list of questions that will be used in the quiz
 list_of_questions = []
 
 
