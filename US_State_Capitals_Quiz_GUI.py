@@ -20,7 +20,7 @@ class SetupScreen:
         self.number_of_questions = self.prompt_number_of_questions()
 
 
-    def create_widgets(self):
+    def create_setup_widgets(self):
         """defines the widgets used for the setup screen"""
         self.question_amount_label = tk.Label(self.root, text = "How many questions would you like to be asked about US State Capitals?")
         self.instructions_label = tk.Label(self.root, text = "Enter a number 1-50 (inclusive):")
@@ -30,7 +30,7 @@ class SetupScreen:
         self.wait_message_label = tk.Label(self.root, text = "")
 
 
-    def display_widgets(self):
+    def display_setup_widgets(self):
         """displays the widgets used for the setup screen"""
         self.question_amount_label.pack()
         self.instructions_label.pack()
@@ -40,7 +40,7 @@ class SetupScreen:
         self.wait_message_label.pack()
 
 
-    def destroy_widgets(self):
+    def destroy_setup_widgets(self):
         """removes all of the widgets used for the setup screen"""
         self.question_amount_label.destroy()
         self.instructions_label.destroy()
@@ -60,8 +60,8 @@ class SetupScreen:
         #keep looping until an appropriate response is given
         while True:
             #create and display widgets that determine question amount
-            self.create_widgets()
-            self.display_widgets()
+            self.create_setup_widgets()
+            self.display_setup_widgets()
 
             #reset the button_pressed variable to False
             self.button_pressed.set(False)
@@ -104,7 +104,7 @@ class SetupScreen:
             
             #no matter what, delete all of the widgets on the screen so that they can be rebuilt in the next loop or QuizScreen
             finally:
-                self.destroy_widgets()
+                self.destroy_setup_widgets()
 
 
 class QuizScreen:
@@ -128,7 +128,7 @@ class QuizScreen:
         self.number_correct, self.points_earned = self.US_State_Capitals_Quiz_GUI(self.list_of_random_questions)
 
 
-    def create_widgets(self):
+    def create_quiz_widgets(self):
         """defines the widgets used for the quiz screen"""
         self.question_label = tk.Label(self.root, text = "")
         self.population_rank_and_weight_label = tk.Label(self.root, text = "")
@@ -140,7 +140,7 @@ class QuizScreen:
         self.wait_label = tk.Label(self.root, text = "")
 
 
-    def display_widgets(self):
+    def display_quiz_widgets(self):
         """displays the widgets used for the quiz screen"""
         self.question_label.pack()
         self.population_rank_and_weight_label.pack()
@@ -150,6 +150,25 @@ class QuizScreen:
         self.number_correct_label.pack()
         self.points_label.pack()
         self.wait_label.pack()
+    
+
+    def destroy_quiz_widgets(self):
+        """removes all of the widgets used for the quiz screen"""
+        self.question_label.destroy()
+        self.population_rank_and_weight_label.destroy()
+        self.user_entry.destroy()
+        self.check_answer_button.destroy()
+        self.message_label.destroy()
+        self.number_correct_label.destroy()
+        self.points_label.destroy()
+        self.wait_label.destroy()
+
+    def generate_random_questions(self, number_of_questions):
+        """generates a list of random questions for the quiz"""
+        list_of_random_questions = random.sample(list_of_questions, number_of_questions)
+        maximum_points = sum([question.weight for question in list_of_random_questions])
+        return list_of_random_questions, maximum_points
+
 
     def display_question_info(self, question_text, population_rank_and_weight_text):
         """shows the appropriate question information on the quiz screen"""
@@ -175,29 +194,10 @@ class QuizScreen:
             self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
 
 
-    def destroy_widgets(self):
-        """removes all of the widgets used for the quiz screen"""
-        self.question_label.destroy()
-        self.population_rank_and_weight_label.destroy()
-        self.user_entry.destroy()
-        self.check_answer_button.destroy()
-        self.message_label.destroy()
-        self.number_correct_label.destroy()
-        self.points_label.destroy()
-        self.wait_label.destroy()
-
-
     def track_button_press(self):
         """accessed by buttons; sets the button_pressed attribute to True"""
         self.button_pressed.set(True)
 
-
-    def generate_random_questions(self, number_of_questions):
-        """generates a list of random questions for the quiz"""
-        list_of_random_questions = random.sample(list_of_questions, number_of_questions)
-        maximum_points = sum([question.weight for question in list_of_random_questions])
-        return list_of_random_questions, maximum_points
-        
 
     def US_State_Capitals_Quiz_GUI(self, list_of_random_questions):
         #set number_correct and points to 0
@@ -208,7 +208,7 @@ class QuizScreen:
         #begin iterating through each question
         for question in list_of_random_questions:
             #create the widgets
-            self.create_widgets()
+            self.create_quiz_widgets()
 
             #input the correct question information into the widgets
             question_text = question.create_question_text(question_number)
@@ -216,7 +216,7 @@ class QuizScreen:
             self.display_question_info(question_text, population_rank_and_weight_text)
 
             #display the widgets
-            self.display_widgets()
+            self.display_quiz_widgets()
 
             #set the button_pressed variable to False
             self.button_pressed.set(False)
@@ -247,7 +247,7 @@ class QuizScreen:
             time.sleep(3)
 
             #remove all of the widgets on the screen so that they can be built again in the next loop
-            self.destroy_widgets()
+            self.destroy_quiz_widgets()
 
         return self.number_correct, self.points_earned
             
@@ -268,15 +268,15 @@ class FinalScreen:
         self.display_totals()
     
 
-    def create_widgets(self):
+    def create_final_widgets(self):
         """defines the widgets used for the final screen"""
         self.thank_you_message_label = tk.Label(self.root, text = "Thank you! You have completed the US State Capitals Quiz!")
         self.number_correct_label = tk.Label(self.root, text = f"Total Number Correct: {self.number_correct}/{self.number_of_questions}")
         self.points_earned_label = tk.Label(self.root, text = f"Total Points Earned: {self.points_earned}/{self.maximum_points}")
-        self.exit_button = tk.Button(self.root, text = "Exit", command = self.close_window)
+        self.exit_button = tk.Button(self.root, text = "Exit", command = self.close_final_window)
 
 
-    def display_widgets(self):
+    def display_final_widgets(self):
         """displays the widgets used for the final screen"""
         self.thank_you_message_label.pack()
         self.number_correct_label.pack()
@@ -284,20 +284,30 @@ class FinalScreen:
         self.exit_button.pack()
 
 
-    def close_window(self):
+    def close_final_window(self):
         """closes the GUI"""
         self.root.destroy()
 
 
     def display_totals(self):
         """creates the final screen"""
-        self.create_widgets()
-        self.display_widgets()
+        self.create_final_widgets()
+        self.display_final_widgets()
 
         
 if __name__ == "__main__":
+    #create GUI window and rename it
     root = tk.Tk()
+    root.title("US State Capitals Quiz GUI")
+
+    #ask for the number of questions
     setup = SetupScreen(root)
+
+    #conduct the quiz
     quiz = QuizScreen(root, setup.number_of_questions)
+
+    #display results with information from previous step
     final_screen = FinalScreen(root, quiz.number_correct, quiz.number_of_questions, quiz.points_earned, quiz.maximum_points)
+
+    #make GUI work
     root.mainloop()
