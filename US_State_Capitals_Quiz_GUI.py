@@ -253,7 +253,7 @@ class QuizScreen:
             
 
 class FinalScreen:
-    """the last screen where the user can see how they did"""
+    """the final screen where the user can see how they did"""
     def __init__(self, root, number_correct, number_of_questions, points_earned, maximum_points):
         #reference the GUI window
         self.root = root
