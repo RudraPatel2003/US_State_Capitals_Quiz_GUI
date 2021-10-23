@@ -15,24 +15,29 @@ wikipedia_page_text = wikipedia_page_request.text
 
 soup = BeautifulSoup(wikipedia_page_text, "html.parser")
 
+#DESIRED_CAPTION is used to identify the desired table on the page
+DESIRED_CAPTION = "Population of states, territories, divisions and regions\n[16]"
 
 #find every table on the page
 all_tables = soup.find_all("table")
 
-#filter the tables to only those that contain captions
-tables_with_captions = [table for table in all_tables if table.caption is not None]
-# print(len(tables_with_captions))
-
 #find the desired table
-#this step requires developer to manually determine which table to access 
-#in this case, there is only 1 table in the list to choose from
-#if there were more / if the page were to change, change the index 
-desire_tabled = tables_with_captions[0]
+for table in all_tables:
+    caption = table.find("caption")
 
-#find all the rows in the table
-table_rows = desire_tabled.find_all("tr")
+    #do not consider tables with no captions
+    if caption == [] or caption == None:
+        continue
 
+    #if a table has a caption, get the caption's text and strip it of leading spaces and new lines
+    caption_text = caption.get_text()
+    stripped_caption_text = caption_text.rstrip()
 
+    #if this caption is the caption I am looking for, then it is the correct table
+    if stripped_caption_text == DESIRED_CAPTION:
+        desired_table = table
+
+table_rows = desired_table.find_all("tr")
 #for each row, create a list containing each cell's content as a string
 for row in table_rows:
     table_cells = row.find_all("td")
