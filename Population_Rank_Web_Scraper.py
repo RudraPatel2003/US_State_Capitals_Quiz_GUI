@@ -16,7 +16,7 @@ wikipedia_page_text = wikipedia_page_request.text
 soup = BeautifulSoup(wikipedia_page_text, "html.parser")
 
 #DESIRED_CAPTION is used to identify the desired table on the page
-DESIRED_CAPTION = "Population of states, territories, divisions and regions\n[16]"
+DESIRED_CAPTION = "Population of states, territories, divisions and regions\n[12]"
 
 #find every table on the page
 all_tables = soup.find_all("table")
