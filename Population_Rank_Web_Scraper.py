@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 from States_and_State_Capitals_Reader import list_of_state_names
-import random
 
 
 #the purpose of this file is to create a dictionary mapping different state names to their population rank
