@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from States_and_State_Capitals_Reader import list_of_state_names
+import random
 
 
 #the purpose of this file is to create a dictionary mapping different state names to their population rank
@@ -37,18 +38,35 @@ for table in all_tables:
     if stripped_caption_text == DESIRED_CAPTION:
         desired_table = table
 
-table_rows = desired_table.find_all("tr")
-#for each row, create a list containing each cell's content as a string
-for row in table_rows:
-    table_cells = row.find_all("td")
-    list_of_table_cells = [cell.text.strip() for cell in table_cells]
+#if the search for the table works, create a dictionary with up to date information
+try:
+    table_rows = desired_table.find_all("tr")
+    #for each row, create a list containing each cell's content as a string
+    for row in table_rows:
+        table_cells = row.find_all("td")
+        list_of_table_cells = [cell.text.strip() for cell in table_cells]
 
-    #only continue if the list is not empty
-    if len(list_of_table_cells) == 0:
-        continue
+        #only continue if the list is not empty
+        if len(list_of_table_cells) == 0:
+            continue
 
-    #if the first cell in the row is one of the 50 states, then extract the data needed to add a key-value pair to the dictionary
-    if list_of_table_cells[0] in list_of_state_names:
-        state = list_of_table_cells[0]
-        population_rank = int(list_of_table_cells[1])
-        dictionary_of_population_ranks[state] = population_rank
+        #if the first cell in the row is one of the 50 states, then extract the data needed to add a key-value pair to the dictionary
+        if list_of_table_cells[0] in list_of_state_names:
+            state = list_of_table_cells[0]
+            population_rank = int(list_of_table_cells[1])
+            dictionary_of_population_ranks[state] = population_rank
+
+#if the search for the table fails, use a backup dictionary that contains information from 7:05 pm on November 19th, 2021
+except:
+    dictionary_of_population_ranks = {
+        'Massachusetts': 15, 'Connecticut': 29, 'New Hampshire': 41, 'Maine': 42, 'Rhode Island': 43, 
+        'Vermont': 49, 'New York': 4, 'Pennsylvania': 5, 'New Jersey': 11, 'Florida': 3, 
+        'Georgia': 8, 'North Carolina': 9, 'Virginia': 12, 'Maryland': 18, 'South Carolina': 23, 
+        'West Virginia': 39, 'Delaware': 45, 'Tennessee': 16, 'Alabama': 24, 'Kentucky': 26, 
+        'Mississippi': 34, 'Texas': 2, 'Louisiana': 25, 'Oklahoma': 28, 'Arkansas': 33, 
+        'Illinois': 6, 'Ohio': 7, 'Michigan': 10, 'Indiana': 17, 'Wisconsin': 20, 
+        'Missouri': 19, 'Minnesota': 22, 'Iowa': 31, 'Kansas': 35, 'Nebraska': 37, 
+        'South Dakota': 46, 'North Dakota': 47, 'Arizona': 14, 'Colorado': 21, 'Utah': 30, 
+        'Nevada': 32, 'New Mexico': 36, 'Idaho': 38, 'Montana': 44, 'Wyoming': 50, 
+        'California': 1, 'Washington': 13, 'Oregon': 27, 'Hawaii': 40, 'Alaska': 48
+    }
