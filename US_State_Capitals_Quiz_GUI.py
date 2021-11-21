@@ -1,5 +1,6 @@
 import tkinter as tk
 from Questions import Question, list_of_questions
+from Population_Rank_Web_Scraper import backup_dictionary_used
 import time
 import random
 
@@ -28,6 +29,7 @@ class SetupScreen:
         self.question_amount_entry_submit_button = tk.Button(self.root, text = "Submit", command = self.track_button_press)
         self.error_message_label = tk.Label(self.root, text = "")
         self.wait_message_label = tk.Label(self.root, text = "")
+        self.backup_dictionary_message_label = tk.Label(self.root, text = "Could not retreive population rank data; backup dictionary in use")
 
 
     def display_setup_widgets(self):
@@ -38,6 +40,8 @@ class SetupScreen:
         self.question_amount_entry_submit_button.pack()
         self.error_message_label.pack()
         self.wait_message_label.pack()
+        if backup_dictionary_used:
+            self.backup_dictionary_message_label.pack()
 
 
     def destroy_setup_widgets(self):
@@ -48,6 +52,7 @@ class SetupScreen:
         self.question_amount_entry_submit_button.destroy()
         self.error_message_label.destroy()
         self.wait_message_label.destroy()
+        self.backup_dictionary_message_label.destroy()
 
 
     def track_button_press(self):

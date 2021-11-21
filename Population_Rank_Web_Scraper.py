@@ -54,6 +54,9 @@ try:
             state = list_of_table_cells[0]
             population_rank = int(list_of_table_cells[1])
             dictionary_of_population_ranks[state] = population_rank
+    
+    #indicate that backup dictionary was not used
+    backup_dictionary_used = False
 
 #if the search for the table fails, use a backup dictionary that contains information from 7:05 pm on November 19th, 2021
 except:
@@ -69,3 +72,6 @@ except:
         'Nevada': 32, 'New Mexico': 36, 'Idaho': 38, 'Montana': 44, 'Wyoming': 50, 
         'California': 1, 'Washington': 13, 'Oregon': 27, 'Hawaii': 40, 'Alaska': 48
     }
+
+    #indicate that backup dictionary was used
+    backup_dictionary_used = True
