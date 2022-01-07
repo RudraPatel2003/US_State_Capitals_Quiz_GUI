@@ -4,6 +4,8 @@ import csv
 #the purpose of this file is to read the .csv file in order to create a list of state names and a dictionary mapping state names to their capitals
 list_of_state_names = []
 dictionary_of_state_capitals = {}
+dictionary_of_states = {}
+list_of_state_capitals = []
 
 
 #file name
@@ -22,4 +24,6 @@ with open(csv_file_name, "r") as csv_file:
         state = row[0]
         capital = row[1]
         list_of_state_names.append(state)
+        list_of_state_capitals.append(capital)
         dictionary_of_state_capitals[state] = capital
+        dictionary_of_states[capital] = state

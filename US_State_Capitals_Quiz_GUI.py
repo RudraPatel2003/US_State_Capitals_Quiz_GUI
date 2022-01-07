@@ -1,6 +1,7 @@
 import tkinter as tk
 from Questions import Question, list_of_questions
 from Population_Rank_Web_Scraper import backup_dictionary_used
+from States_and_State_Capitals_Reader import list_of_state_capitals, dictionary_of_states
 import time
 import random
 
@@ -181,8 +182,9 @@ class QuizScreen:
         self.population_rank_and_weight_label.configure(text = population_rank_and_weight_text)
 
 
-    def display_number_correct_and_points(self, question, correct, ongoing_accuracy, ongoing_points):
-        """after a question is answered, show if they got it right or not and the ongoing accuracy and points"""
+    def display_number_correct_and_points(self, question, correct, user_answer, ongoing_accuracy, ongoing_points):
+        """after a question is answered, show if they got it right or not (and if they were thinking of a different state) and the ongoing accuracy and points"""
+        #if they got the question right, congratulate them
         if correct:
             #display question outcome
             self.message_label.configure(text = "Correct!")
@@ -190,6 +192,30 @@ class QuizScreen:
             #display ongoing accuracy and points
             self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
             self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+        
+        #if they didn't type in anything, display correct answer
+        if user_answer == "":
+            #display question outcome and teach correct capital
+            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}.")
+
+            #display ongoing accuracy and points
+            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
+            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+        
+        #if they got it wrong, check if their answer is a different state's capital
+        list_of_other_state_capitals = [i for i in list_of_state_capitals if i != question.capital]
+        if user_answer in list_of_other_state_capitals:
+            #if it is a different state capital, tell them what the capital is and teach say what state they were thinking of
+            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}. {user_answer} is actually the capital of {dictionary_of_states[user_answer]}.")
+
+            #display ongoing accuracy and points
+            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
+            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+        
+        #if they got it wrong and it is not a different capital, teach them the correct state
         else:
             #display question outcome and teach correct capital
             self.message_label.configure(text = f"Incorrect. The answer is {question.capital}.")
@@ -197,6 +223,7 @@ class QuizScreen:
             #display ongoing accuracy and points
             self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
             self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
 
 
     def track_button_press(self):
@@ -239,9 +266,9 @@ class QuizScreen:
                 self.points_earned += question.weight
             else:
                 correct = False
-            
+
             #display ongoing accuracy and points
-            self.display_number_correct_and_points(question, correct, self.number_correct, self.points_earned)
+            self.display_number_correct_and_points(question, correct, user_answer, self.number_correct, self.points_earned)
 
             #increase the question number
             question_number += 1
