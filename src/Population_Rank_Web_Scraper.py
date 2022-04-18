@@ -26,7 +26,7 @@ soup = bs4.BeautifulSoup(URL_page_text, "html.parser")
 try: 
     #locate the desired table using its html tag and class
     #this returns a list, so access the first element
-    desired_table = soup.find_all("table", class_="jsx-3979628367 table table-striped tp-table-body")[0]
+    desired_table = soup.find_all("table")[0]
 
     table_rows = desired_table.find_all("tr")
 

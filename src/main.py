@@ -12,16 +12,18 @@ import States_and_State_Capitals_Reader
 import time
 import random
 
-#the purpose of this file is to create a GUI where the quiz on US State Capitals can be conducted
-
 class SetupScreen:
-    """the first stage of the quiz, where the user is asked for the amount of questions they want"""
+    """the first stage of the quiz, where the user is asked for the amount of questions they want
+    
+    Attributes:
+        root: the GUI window
+    """
     def __init__(self, root):
+        """initialize the setup screen"""
         #reference the GUI window
         self.root = root
 
-        #create an attribute that determines if a button in the GUI has been pressed or not and initially set it to False
-        #this is set as an attribute because it is modified by different methods
+        #track if the button in the GUI has been pressed
         self.button_pressed = tk.BooleanVar(self.root)
         self.button_pressed.set("False")
 
@@ -29,60 +31,18 @@ class SetupScreen:
         self.number_of_questions = self.prompt_number_of_questions()
 
 
-    def create_setup_widgets(self):
-        """defines the widgets used for the setup screen"""
-        self.question_amount_label = tk.Label(self.root, text = "How many questions would you like to be asked about US State Capitals?")
-        self.instructions_label = tk.Label(self.root, text = "Enter a number 1-50 (inclusive):")
-        self.question_amount_entry = tk.Entry(self.root)
-        self.question_amount_entry_submit_button = tk.Button(self.root, text = "Submit", command = self.track_button_press)
-        self.error_message_label = tk.Label(self.root, text = "")
-        self.wait_message_label = tk.Label(self.root, text = "")
-        self.backup_dictionary_message_label = tk.Label(self.root, text = "Could not retreive population rank data; backup dictionary in use")
-
-
-    def display_setup_widgets(self):
-        """displays the widgets used for the setup screen"""
-        self.question_amount_label.pack()
-        self.instructions_label.pack()
-        self.question_amount_entry.pack()
-        self.question_amount_entry_submit_button.pack()
-        self.error_message_label.pack()
-        self.wait_message_label.pack()
-        if Population_Rank_Web_Scraper.backup_dictionary_used:
-            self.backup_dictionary_message_label.pack()
-
-
-    def destroy_setup_widgets(self):
-        """removes all of the widgets used for the setup screen"""
-        self.question_amount_label.destroy()
-        self.instructions_label.destroy()
-        self.question_amount_entry.destroy()
-        self.question_amount_entry_submit_button.destroy()
-        self.error_message_label.destroy()
-        self.wait_message_label.destroy()
-        self.backup_dictionary_message_label.destroy()
-
-
-    def track_button_press(self):
-        """accessed by buttons; sets the button_pressed attribute to True"""
-        self.button_pressed.set("True")
-
-
     def prompt_number_of_questions(self):
         """asks the user for how many questions they want"""
         #keep looping until an appropriate response is given
         while True:
-            #create and display widgets that determine question amount
             self.create_setup_widgets()
             self.display_setup_widgets()
 
-            #reset the button_pressed variable to False
-            self.button_pressed.set(False)
-
             #wait until the button is pressed, as that changes the value of button_pressed from False to True
+            self.button_pressed.set(False)
             self.root.wait_variable(self.button_pressed)
             
-            #pull the data that the user has entered into the entry box, converting it into an integer
+            #user input is a string, so convert to an int
             #exceptions are handled by displaying a message and waiting 3 seconds before the screen is refreshed (a new loop)
             #the GUI must update before sleeping or the error and wait labels will not appear
             try:
@@ -120,14 +80,63 @@ class SetupScreen:
                 self.destroy_setup_widgets()
 
 
+    def create_setup_widgets(self):
+        """defines the widgets used for the setup screen"""
+        self.question_amount_label = tk.Label(self.root, text = "How many questions would you like to be asked about US State Capitals?")
+        self.instructions_label = tk.Label(self.root, text = "Enter a number 1-50 (inclusive):")
+        self.question_amount_entry = tk.Entry(self.root)
+        self.question_amount_entry_submit_button = tk.Button(self.root, text = "Submit", command = self.track_button_press)
+        self.error_message_label = tk.Label(self.root, text = "")
+        self.wait_message_label = tk.Label(self.root, text = "")
+        self.backup_dictionary_message_label = tk.Label(self.root, text = "Could not retreive population rank data; backup dictionary in use")
+
+
+    def display_setup_widgets(self):
+        """displays the widgets used for the setup screen"""
+        self.question_amount_label.pack()
+        self.instructions_label.pack()
+        self.question_amount_entry.pack()
+        self.question_amount_entry_submit_button.pack()
+        self.error_message_label.pack()
+        self.wait_message_label.pack()
+        
+        #displays message indicating if backup dictionary is in use
+        if Population_Rank_Web_Scraper.backup_dictionary_used:
+            self.backup_dictionary_message_label.pack()
+
+
+    def destroy_setup_widgets(self):
+        """removes all of the widgets used for the setup screen"""
+        self.question_amount_label.destroy()
+        self.instructions_label.destroy()
+        self.question_amount_entry.destroy()
+        self.question_amount_entry_submit_button.destroy()
+        self.error_message_label.destroy()
+        self.wait_message_label.destroy()
+        self.backup_dictionary_message_label.destroy()
+
+
+    def track_button_press(self):
+        """accessed by buttons; sets the button_pressed attribute to True"""
+        self.button_pressed.set("True")
+
+
+    
+
+
 class QuizScreen:
-    """The second stage of the quiz, where the quiz is conducted"""
-    def __init__(self, root, number_of_questions):
+    """The second stage of the quiz, where the quiz is conducted
+    
+    Attributes:
+        root: the GUI window
+        number_of_questions: the number of questions that the quiz will contain
+    """
+    def __init__(self, root, number_of_questions: int):
+        """initializes the quiz"""
         #reference the GUI window
         self.root = root
 
-        #create an attribute that determines if a button in the GUI has been pressed or not and initially set it to False
-        #this is set as an attribute because it is modified by different methods
+        #track if the button in the GUI has been pressed
         self.button_pressed = tk.BooleanVar(self.root)
         self.button_pressed.set("False")
 
@@ -141,6 +150,122 @@ class QuizScreen:
         self.number_correct, self.points_earned = self.US_State_Capitals_Quiz_GUI(self.list_of_random_questions)
 
 
+    def US_State_Capitals_Quiz_GUI(self, list_of_random_questions: list[Questions.Question]) -> tuple[int, int]:
+        #set number_correct and points to 0
+        self.number_correct = 0
+        self.points_earned = 0
+        question_number = 1
+
+        #begin iterating through each question
+        for question in list_of_random_questions:
+            self.create_quiz_widgets()
+
+            #input the correct question information into the widgets
+            question_text = question.create_question_text(question_number)
+            population_rank_and_weight_text = question.create_population_rank_and_weight_text()
+            self.display_question_info(question_text, population_rank_and_weight_text)
+
+            self.display_quiz_widgets()
+
+            #wait for the button to be pressed
+            self.root.wait_variable(self.button_pressed)
+            self.button_pressed.set(False)
+            
+            #once the button is pressed, pull the text in the entry box
+            user_answer = self.user_entry.get()
+
+            #evaluate the user's answer and update number correct and points
+            if user_answer == question.capital:
+                correct = True
+                self.number_correct += 1
+                self.points_earned += question.weight
+            else:
+                correct = False
+
+            #display ongoing accuracy and points
+            self.display_number_correct_and_points(question, correct, user_answer, self.number_correct, self.points_earned)
+
+            #increase the question number
+            question_number += 1
+
+            #wait 3 seconds for the next question, updating the GUI before the sleep command so that it shows up
+            self.wait_label.configure(text = "Please wait 3 seconds...")
+            self.root.update()
+            time.sleep(3)
+
+            #remove all of the widgets on the screen so that they can be built again in the next loop
+            self.destroy_quiz_widgets()
+
+        return self.number_correct, self.points_earned
+
+
+    def generate_random_questions(self, number_of_questions: int) -> tuple[list[Questions.Question], int]:
+        """generates a list of random questions for the quiz
+        
+        Arguments:
+            number_of_questions: the number of questions that the quiz will contain
+        
+        Returns:
+            list_of_random_questions: the list of questions that the quiz will run through
+            maximum_points: the maximum number of points that can be earned if all questions are answered correctly
+        """
+        list_of_random_questions = random.sample(Questions.list_of_questions, number_of_questions)
+        maximum_points = sum([question.weight for question in list_of_random_questions])
+        return list_of_random_questions, maximum_points
+
+
+    def display_question_info(self, question_text: str, population_rank_and_weight_text: str):
+        """shows the appropriate question information on the quiz screen
+
+        Arguments:
+            question_text: the text displaying the actual question
+            population_rank_and_weight_text: the text containing each state's population rank and point value
+        """
+        self.question_label.configure(text = question_text)
+        self.population_rank_and_weight_label.configure(text = population_rank_and_weight_text)
+
+
+    def display_number_correct_and_points(self, question: Questions.Question, correct: bool, user_answer: str, ongoing_accuracy: int, ongoing_points: int):
+        """after a question is answered, show if they got it right or not (and if they were thinking of a different state) and the ongoing accuracy and points
+        
+        Arguments:
+            question: the Question instance
+            correct: if the user got the answer correct or not
+            user_answer: the user's answer to the question
+            ongoing_accuracy: the number of questions the user has answered so far
+            ongoing_points: the number of questions the user has earned so far
+        """
+        #if they got the question right, congratulate them
+        if correct:
+            self.message_label.configure(text = "Correct!")
+
+            #display ongoing accuracy and points
+            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
+            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+
+        #if they got it wrong, check if their answer is a different state's capital
+        list_of_other_state_capitals = [i for i in States_and_State_Capitals_Reader.list_of_state_capitals if i != question.capital]
+        if user_answer in list_of_other_state_capitals:
+            #if it is a different state capital, tell them what the capital is and teach say what state they were thinking of
+            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}. {user_answer} is actually the capital of {States_and_State_Capitals_Reader.dictionary_of_states[user_answer]}.")
+
+            #display ongoing accuracy and points
+            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
+            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+        
+        #if they got it wrong and it is not a different capital, teach them the correct state
+        else:
+            #display question outcome and teach correct capital
+            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}.")
+
+            #display ongoing accuracy and points
+            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
+            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
+            return
+
+        
     def create_quiz_widgets(self):
         """defines the widgets used for the quiz screen"""
         self.question_label = tk.Label(self.root, text = "")
@@ -176,124 +301,24 @@ class QuizScreen:
         self.points_label.destroy()
         self.wait_label.destroy()
 
-    def generate_random_questions(self, number_of_questions):
-        """generates a list of random questions for the quiz"""
-        list_of_random_questions = random.sample(Questions.list_of_questions, number_of_questions)
-        maximum_points = sum([question.weight for question in list_of_random_questions])
-        return list_of_random_questions, maximum_points
-
-
-    def display_question_info(self, question_text, population_rank_and_weight_text):
-        """shows the appropriate question information on the quiz screen"""
-        self.question_label.configure(text = question_text)
-        self.population_rank_and_weight_label.configure(text = population_rank_and_weight_text)
-
-
-    def display_number_correct_and_points(self, question, correct, user_answer, ongoing_accuracy, ongoing_points):
-        """after a question is answered, show if they got it right or not (and if they were thinking of a different state) and the ongoing accuracy and points"""
-        #if they got the question right, congratulate them
-        if correct:
-            #display question outcome
-            self.message_label.configure(text = "Correct!")
-
-            #display ongoing accuracy and points
-            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
-            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
-            return
-        
-        #if they didn't type in anything, display correct answer
-        if user_answer == "":
-            #display question outcome and teach correct capital
-            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}.")
-
-            #display ongoing accuracy and points
-            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
-            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
-            return
-        
-        #if they got it wrong, check if their answer is a different state's capital
-        list_of_other_state_capitals = [i for i in States_and_State_Capitals_Reader.list_of_state_capitals if i != question.capital]
-        if user_answer in list_of_other_state_capitals:
-            #if it is a different state capital, tell them what the capital is and teach say what state they were thinking of
-            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}. {user_answer} is actually the capital of {States_and_State_Capitals_Reader.dictionary_of_states[user_answer]}.")
-
-            #display ongoing accuracy and points
-            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
-            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
-            return
-        
-        #if they got it wrong and it is not a different capital, teach them the correct state
-        else:
-            #display question outcome and teach correct capital
-            self.message_label.configure(text = f"Incorrect. The answer is {question.capital}.")
-
-            #display ongoing accuracy and points
-            self.number_correct_label.configure(text = f"Number Correct: {ongoing_accuracy}/{self.number_of_questions}")
-            self.points_label.configure(text = f"Points Earned: {ongoing_points}/{self.maximum_points}")
-            return
-
 
     def track_button_press(self):
         """accessed by buttons; sets the button_pressed attribute to True"""
         self.button_pressed.set(True)
 
 
-    def US_State_Capitals_Quiz_GUI(self, list_of_random_questions):
-        #set number_correct and points to 0
-        self.number_correct = 0
-        self.points_earned = 0
-        question_number = 1
-
-        #begin iterating through each question
-        for question in list_of_random_questions:
-            #create the widgets
-            self.create_quiz_widgets()
-
-            #input the correct question information into the widgets
-            question_text = question.create_question_text(question_number)
-            population_rank_and_weight_text = question.create_population_rank_and_weight_text()
-            self.display_question_info(question_text, population_rank_and_weight_text)
-
-            #display the widgets
-            self.display_quiz_widgets()
-
-            #set the button_pressed variable to False
-            self.button_pressed.set(False)
-
-            #wait for the button to be pressed
-            self.root.wait_variable(self.button_pressed)
-
-            #once the button is pressed, pull the text in the entry box
-            user_answer = self.user_entry.get()
-
-            #evaluate the user's answer and update number correct and points
-            if user_answer == question.capital:
-                correct = True
-                self.number_correct += 1
-                self.points_earned += question.weight
-            else:
-                correct = False
-
-            #display ongoing accuracy and points
-            self.display_number_correct_and_points(question, correct, user_answer, self.number_correct, self.points_earned)
-
-            #increase the question number
-            question_number += 1
-
-            #wait 3 seconds for the next question, updating the GUI before the sleep command so that it shows up
-            self.wait_label.configure(text = "Please wait 3 seconds...")
-            self.root.update()
-            time.sleep(3)
-
-            #remove all of the widgets on the screen so that they can be built again in the next loop
-            self.destroy_quiz_widgets()
-
-        return self.number_correct, self.points_earned
-            
-
 class FinalScreen:
-    """the final screen where the user can see how they did"""
+    """the final screen where the user can see how they did
+    
+    Attributes:
+        root: the GUI window
+        number_correct: the number of questions the user got correct
+        number_of_questions: the number of questions asked
+        points_eanred: the number of points the user earned
+        maximum_points: the maximum number of points that can be earned if all questions are answered correctly
+    """
     def __init__(self, root, number_correct, number_of_questions, points_earned, maximum_points):
+        "initializes the final screen"
         #reference the GUI window
         self.root = root
 
@@ -307,6 +332,12 @@ class FinalScreen:
         self.display_totals()
     
 
+    def display_totals(self):
+        """creates the final screen"""
+        self.create_final_widgets()
+        self.display_final_widgets()
+
+    
     def create_final_widgets(self):
         """defines the widgets used for the final screen"""
         self.thank_you_message_label = tk.Label(self.root, text = "Thank you! You have completed the US State Capitals Quiz!")
@@ -328,16 +359,22 @@ class FinalScreen:
         self.root.destroy()
 
 
-    def display_totals(self):
-        """creates the final screen"""
-        self.create_final_widgets()
-        self.display_final_widgets()
-
-        
 if __name__ == "__main__":
     #create GUI window and rename it
     root = tk.Tk()
     root.title("US State Capitals Quiz GUI")
+    
+    #resize and center the screen (https://www.pythontutorial.net/tkinter/tkinter-window/ for explanation)
+    window_width = 600
+    window_height = 200
+
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    centerpoint_x = int(screen_width / 2 - window_width / 2)
+    centerpoint_y = int(screen_height / 2 - window_height / 2)
+
+    root.geometry(f'{window_width}x{window_height}+{centerpoint_x}+{centerpoint_y}')
 
     #ask for the number of questions
     setup = SetupScreen(root)
