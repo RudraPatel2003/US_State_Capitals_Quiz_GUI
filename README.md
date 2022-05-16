@@ -25,7 +25,7 @@ python -m pip install -r requirements.txt
 
 ## Usage
 
-Run US_State_Capitals_Quiz_GUI.py
+Run main.py
 
 ## Contributing
 Pull requests are welcome.
