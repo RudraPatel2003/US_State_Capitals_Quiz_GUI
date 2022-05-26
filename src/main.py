@@ -12,6 +12,7 @@ import States_and_State_Capitals_Reader
 import time
 import random
 
+
 class SetupScreen:
     """the first stage of the quiz, where the user is asked for the amount of questions they want
     
@@ -119,9 +120,6 @@ class SetupScreen:
     def track_button_press(self):
         """accessed by buttons; sets the button_pressed attribute to True"""
         self.button_pressed.set("True")
-
-
-    
 
 
 class QuizScreen:
@@ -233,7 +231,7 @@ class QuizScreen:
             correct: if the user got the answer correct or not
             user_answer: the user's answer to the question
             ongoing_accuracy: the number of questions the user has answered so far
-            ongoing_points: the number of questions the user has earned so far
+            ongoing_points: the number of points the user has earned so far
         """
         #if they got the question right, congratulate them
         if correct:
@@ -314,7 +312,7 @@ class FinalScreen:
         root: the GUI window
         number_correct: the number of questions the user got correct
         number_of_questions: the number of questions asked
-        points_eanred: the number of points the user earned
+        points_earned: the number of points the user earned
         maximum_points: the maximum number of points that can be earned if all questions are answered correctly
     """
     def __init__(self, root, number_correct, number_of_questions, points_earned, maximum_points):
