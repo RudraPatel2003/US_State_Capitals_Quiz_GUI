@@ -1,8 +1,14 @@
-# US_State_Capitals_Quiz_GUI  
+<h1 align="center">
+  <br>
+    <img src="https://raw.githubusercontent.com/RudraPatel2003/US_State_Capitals_Quiz_GUI/master/src/assets/images/Logo.png">
+  <br>
+  U.S. State Capitals Quiz GUI
+  <br>
+</h1>
 
-This project conducts a quiz on US State Capitals with randomly generated questions. Through a GUI, the user selects the amount of questions they would like to be asked. The questions then appear in the GUI.
+<h2 align="center">A U.S. State Capitals Quiz built with Python and tkinter </h2>
 
-## Installation Steps
+## 🔨 Installation and Usage
 
 ### 1\. Clone the repository
 ```bash
@@ -23,13 +29,10 @@ Unix/macOS:
 python -m pip install -r requirements.txt
 ```
 
-## Usage
+### 4. Run main.py
 
-Run main.py
+## 🤝 Contributing
+Pull requests are welcome!
 
-## Contributing
-Pull requests are welcome.
-
-## License
-
+## 📖 License
 [MIT](https://choosealicense.com/licenses/mit/)
