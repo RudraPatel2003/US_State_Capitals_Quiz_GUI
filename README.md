@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h2 align="center">A U.S. State Capitals Quiz built with Python and tkinter </h2>
+<h2 align="center">A U.S. State Capitals Quiz built with Python and tkinter that incorporates web scraping</h2>
 
 https://user-images.githubusercontent.com/85089368/178800212-2c3d5280-abc2-474d-b163-baf6bb7aeee6.mp4
 
